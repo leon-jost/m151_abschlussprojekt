@@ -19,11 +19,24 @@ namespace M151AbschlussprojektFrontend.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            // weather
-            HourlyForecast? hourlyForecast = await WeatherService.GetHourlyForecastAsync(47.14237009806472, 8.636668156694977);
+            // Stündlicher Wetterbericht von API holen.
+            _hourlyForecast = await WeatherService.GetHourlyForecastAsync(47.14237009806472, 8.636668156694977);
 
+            EvaluateIfIceHasToBeRemovedFromCar();
+
+            // Umfälle/Stau von API holen.
+            _trafficIncidents = await TrafficIncidentService.GetTrafficIncidentsAsync();
+            if (_trafficIncidents is not null)
+            {
+                // Es wird absteigend nach der Länge des Staus sortiert.
+                _trafficIncidents.incidents = _trafficIncidents.incidents.OrderByDescending(incident => incident.properties.delay).ToList();
+            }
+        }
+
+        private void EvaluateIfIceHasToBeRemovedFromCar()
+        {
             double coldestTemp = 1;
-            foreach (Hourly day in hourlyForecast.hourly)
+            foreach (Hourly day in _hourlyForecast.hourly)
             {
                 // convert unix timestamp
                 DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -48,11 +61,8 @@ namespace M151AbschlussprojektFrontend.Pages
             }
             else
             {
-                _cleanOffCarMessage = "Morgen muss das Auto nicht gekratzt werden.";
+                _cleanOffCarMessage = $"Morgen muss das Auto nicht gekratzt werden, es wird nur {coldestTemp} °C.";
             }
-
-            // traffic incidents
-            _trafficIncidents = await TrafficIncidentService.GetTrafficIncidentsAsync();
         }
     }
 }
