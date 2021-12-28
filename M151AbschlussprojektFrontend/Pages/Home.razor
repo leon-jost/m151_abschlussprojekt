@@ -1,0 +1,26 @@
+﻿@page "/home"
+
+@inject IConfiguration Configuration
+
+@if (_cleanOffCarMessage == null)
+{
+    <MudText Typo="Typo.body1">Loading...</MudText>
+}
+else
+{
+    <MudText Typo="Typo.body1">@_cleanOffCarMessage</MudText>
+}
+
+@if (_trafficIncidents is null)
+{
+    <MudText Typo="Typo.body1">Loading...</MudText>
+}
+else
+{
+    foreach (Incident incident in _trafficIncidents.incidents)
+    {
+        <MudText Typo="Typo.body1">@incident.properties.from</MudText>
+        <MudText Typo="Typo.body1">@incident.properties.to</MudText>
+        <iframe loading="lazy" src="https://www.google.com/maps/embed/v1/place?q=@incident.geometry.coordinates[0][1]+@incident.geometry.coordinates[0][0]&key=@Configuration["googleMapsApi:apiKey"]"></iframe>
+    }
+}
