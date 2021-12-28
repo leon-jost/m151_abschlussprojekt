@@ -24,7 +24,7 @@ namespace M151AbschlussprojektFrontend.Pages
 
             EvaluateIfIceHasToBeRemovedFromCar();
 
-            // Umfälle/Stau von API holen.
+            // Unfälle/Stau von API holen.
             _trafficIncidents = await TrafficIncidentService.GetTrafficIncidentsAsync();
             if (_trafficIncidents is not null)
             {
