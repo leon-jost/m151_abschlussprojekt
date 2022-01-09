@@ -1,4 +1,5 @@
-﻿using M151AbschlussprojektFrontend.Poco.OpenWeatherApi;
+﻿using Blazored.LocalStorage;
+using M151AbschlussprojektFrontend.Poco.OpenWeatherApi;
 using M151AbschlussprojektFrontend.Services.OpenWeatherApi;
 using M151AbschlussprojektFrontend.Services.TomTomApi;
 using Microsoft.AspNetCore.Components;
@@ -11,6 +12,8 @@ namespace M151AbschlussprojektFrontend.Pages
         private IWeatherService WeatherService { get; set; }
         [Inject]
         private ITrafficIncidentService TrafficIncidentService { get; set; }
+        [Inject]
+        private ILocalStorageService LocalStorage { get; set; }
 
         private HourlyForecast? _hourlyForecast;
         private string _cleanOffCarMessage;
@@ -30,6 +33,19 @@ namespace M151AbschlussprojektFrontend.Pages
             {
                 // Es wird absteigend nach der Länge des Staus sortiert.
                 _trafficIncidents.incidents = _trafficIncidents.incidents.OrderByDescending(incident => incident.properties.delay).ToList();
+
+                // Wenn ein Stau höher ist, als der in der Local Storage gespeicherte höchste Stau => diesen ersetzen.
+                int longestRecordedTraffic = await LocalStorage.GetItemAsync<int>("longestRecordedTraffic");
+
+                foreach (Incident incident in _trafficIncidents.incidents)
+                {
+                    if (incident.properties.delay > longestRecordedTraffic)
+                    {
+                        longestRecordedTraffic = incident.properties.delay;
+                    }
+                }
+
+                await LocalStorage.SetItemAsync("longestRecordedTraffic", longestRecordedTraffic);
             }
         }
 

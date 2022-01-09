@@ -1,0 +1,8 @@
+﻿@page "/stats"
+
+<MudText Typo="Typo.h4" Class="mt-3">Stats</MudText>
+
+@if (_longestRecordedTraffic > 0)
+{
+    <MudText Typo="Typo.body1">Der bis jetzt längste aufgezeichnete Stau war: @TimeSpan.FromSeconds(_longestRecordedTraffic).ToString(@"hh\:mm\:ss")</MudText>
+}
