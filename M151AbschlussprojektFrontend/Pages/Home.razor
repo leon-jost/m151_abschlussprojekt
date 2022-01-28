@@ -28,10 +28,17 @@ else
         if (incident.properties.magnitudeOfDelay != 4 && incident.properties.magnitudeOfDelay != 0)
         {
             <MudPaper Class="px-7 py-5 mb-7 mt-2" Elevation="3">
-                @foreach (Event incidentEvent in incident.properties.events)
-                {
-                    <MudText Typo="Typo.body1">Art: @incidentEvent.description</MudText>
-                }
+                <MudText Typo="Typo.body1">
+                    Art:
+                    @foreach (Event incidentEvent in incident.properties.events)
+                    {
+                        <span>@incidentEvent.description</span>
+                        if (incident.properties.events.Count != incident.properties.events.IndexOf(incidentEvent) + 1)
+                        {
+                            <span>, </span>
+                        }
+                    }
+                </MudText>
                 <MudText Typo="Typo.body1">Von: @incident.properties.from</MudText>
                 <MudText Typo="Typo.body1">Nach: @incident.properties.to</MudText>
                 <MudText Typo="Typo.body1">Länge (Zeit): @TimeSpan.FromSeconds(incident.properties.delay).ToString(@"hh\:mm\:ss")</MudText>

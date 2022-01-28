@@ -4,5 +4,5 @@
 
 @if (_longestRecordedTraffic > 0)
 {
-    <MudText Typo="Typo.body1">Der bis jetzt längste aufgezeichnete Stau war: @TimeSpan.FromSeconds(_longestRecordedTraffic).ToString(@"hh\:mm\:ss")</MudText>
+    <MudText Typo="Typo.body1">Der bis jetzt längste aufgezeichnete Stau war: <b>@TimeSpan.FromSeconds(_longestRecordedTraffic).ToString(@"hh\:mm\:ss")</b></MudText>
 }
